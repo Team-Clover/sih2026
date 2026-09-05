@@ -1,0 +1,23 @@
+# Python
+.venv/
+bhu-r/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node dependencies and build output
+node_modules/
+dist/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Logs and local tooling
+*.log
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

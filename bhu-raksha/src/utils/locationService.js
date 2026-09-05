@@ -1,0 +1,1 @@
+export function getCurrentLocation() { return new Promise((resolve, reject) => { if (!navigator.geolocation) return reject(new Error('Location unavailable')); navigator.geolocation.getCurrentPosition(({ coords }) => resolve({ latitude: coords.latitude, longitude: coords.longitude }), reject, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }) }) }

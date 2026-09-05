@@ -1,0 +1,3 @@
+import mongoose from 'mongoose'
+const predictionSchema = new mongoose.Schema({ sourceId: { type: String, unique: true, sparse: true }, state: String, district: String, year: Number, month: Number, rainfall: Number, rainfallAnomaly: Number, rainfallAnomalyPct: Number, temperature: Number, slope: Number, elevation: Number, aiProbability: Number, slopeAdjustment: Number, elevationAdjustment: Number, terrainAdjustment: Number, finalProbability: Number, riskLevel: String, source: { type: String, enum: ['admin', 'system'], default: 'admin' } }, { timestamps: true })
+export default mongoose.model('Prediction', predictionSchema)
