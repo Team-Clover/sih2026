@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Activity, AlertTriangle, BarChart3, Bell, Brain, ChevronRight, CloudRain, Gauge as GaugeIcon, Info, Map, Menu, Mountain, Navigation, RefreshCw, Search, ShieldAlert, Thermometer, UserRound, Waves, X } from 'lucide-react'
 import './App.css'
@@ -55,7 +55,7 @@ function App() {
   function clearHistory() { if (window.confirm('Clear all saved predictions?')) { localStorage.removeItem('landslide-intelligence-history'); setHistory([]); setResult(null) } }
   function go(tab) { setActiveTab(tab); setMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
-  return <div className="app-shell">
+  return <PullToRefresh><div className="app-shell">
     <header className="topbar"><div className="topbar-brand"><span className="logo"><Mountain size={18} /></span><div><strong>Bhu Rakshak</strong><small>ADMIN · LANDSLIDE INTELLIGENCE</small></div></div><div className="topbar-actions"><span className={`connection ${apiOnline ? '' : 'offline'}`}><i /> {apiOnline ? 'LIVE' : 'OFFLINE'}</span><button className="icon-button" aria-label="Search"><Search size={18} /></button><button className="icon-button" aria-label="Open menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button></div></header>
     {menuOpen && <div className="quick-menu"><button onClick={() => go('about')}><Info size={16} /> About the model</button><button onClick={() => checkApiStatus().then(() => setApiOnline(true)).catch(() => setApiOnline(false))}><RefreshCw size={16} /> Check connection</button></div>}
     <main>
@@ -66,7 +66,42 @@ function App() {
       {activeTab === 'about' && <About />}
     </main>
     <nav className="bottom-nav">{[[GaugeIcon, 'home', 'Home'], [Activity, 'predict', 'Predict'], [Map, 'map', 'Map'], [Bell, 'alerts', 'Alerts']].map(([Icon, tab, label]) => <button className={activeTab === tab ? 'active' : ''} key={tab} onClick={() => go(tab)}><Icon size={19} /><span>{label}</span></button>)}</nav>
-  </div>
+  </div></PullToRefresh>
+}
+
+function PullToRefresh({ children }) {
+  const [pull, setPull] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
+  const startY = useRef(null)
+  const tracking = useRef(false)
+  const threshold = 86
+
+  function onTouchStart(event) {
+    if (window.scrollY === 0 && !refreshing) {
+      startY.current = event.touches[0].clientY
+      tracking.current = true
+    }
+  }
+
+  function onTouchMove(event) {
+    if (!tracking.current || startY.current == null) return
+    const distance = event.touches[0].clientY - startY.current
+    if (distance <= 0) { setPull(0); return }
+    setPull(Math.min(distance * 0.48, 118))
+  }
+
+  function onTouchEnd() {
+    if (!tracking.current) return
+    tracking.current = false
+    if (pull >= threshold) {
+      setRefreshing(true)
+      setPull(70)
+      window.setTimeout(() => window.location.reload(), 420)
+    } else setPull(0)
+    startY.current = null
+  }
+
+  return <div className="pull-refresh" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}><div className={`pull-refresh-indicator${refreshing ? ' is-refreshing' : ''}`} style={{ '--pull-distance': `${pull}px` }} aria-live="polite"><span className="pull-refresh-orbit" /><strong>{refreshing ? 'Refreshing' : pull >= threshold ? 'Release to refresh' : 'Pull to refresh'}</strong></div>{children}</div>
 }
 
 function Home({ result, meta, form, history, chartData, analytics, go }) {

@@ -1113,6 +1113,7 @@ p {
     transform: rotate(360deg);
   }
 }
+.pull-refresh{min-height:100vh;position:relative;touch-action:pan-y}.pull-refresh-indicator{position:fixed;top:0;left:50%;z-index:20;display:flex;align-items:center;gap:9px;opacity:calc(var(--pull-distance) / 86);transform:translate(-50%,calc(var(--pull-distance) - 48px));padding:9px 15px;color:var(--text);background:#222a30e8;border:1px solid #ffffff20;border-radius:999px;box-shadow:0 12px 30px #0004;backdrop-filter:blur(16px);font-size:10px;letter-spacing:.02em;pointer-events:none;white-space:nowrap}.pull-refresh-orbit{width:16px;height:16px;border:2px solid #ffffff30;border-top-color:var(--lime);border-radius:50%}.pull-refresh-indicator.is-refreshing{opacity:1;transform:translate(-50%,18px)}.pull-refresh-indicator.is-refreshing .pull-refresh-orbit{animation:pull-refresh-spin .7s linear infinite}@keyframes pull-refresh-spin{to{transform:rotate(360deg)}}
 
 @media(min-width:800px) {
   .bottom-nav {
