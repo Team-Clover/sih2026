@@ -19,6 +19,7 @@ import { errorHandler } from "./src/middleware/errorHandler.js";
 const app = express();
 const server = http.createServer(app);
 const allowedOrigins = [
+  "https://sih2026-one-xi.vercel.app",
   "https://sih2026-62el.vercel.app",
   ...(process.env.CORS_ORIGIN || "http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175,http://127.0.0.1:5180").split(","),
 ]
