@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "dev": "node --watch src/server.js", "start": "node src/server.js", "seed:demo": "node src/seedDemo.js" },
+  "scripts": {
+    "start": "node server.js",
+    "seed:demo": "node src/seedDemo.js"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
