@@ -5,6 +5,15 @@ import pandas as pd
 import joblib
 from pathlib import Path
 import traceback
+import os
+
+ENV_PATH = Path(__file__).resolve().parent / ".env"
+if ENV_PATH.exists():
+    for line in ENV_PATH.read_text(encoding="utf-8").splitlines():
+        key, separator, value = line.partition("=")
+        if separator and key.strip() and not key.lstrip().startswith("#"):
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
 try:
     from citizen_sync import publish_prediction
 except ImportError:
@@ -257,15 +266,15 @@ def predict(request: PredictionRequest):
         # 7. Risk level
         # ----------------------------------------------------
 
-        if risk_percentage < 30:
+        if final_percentage < 30:
 
             risk_level = "LOW"
 
-        elif risk_percentage < 60:
+        elif final_percentage < 60:
 
             risk_level = "MODERATE"
 
-        elif risk_percentage < 80:
+        elif final_percentage < 80:
 
             risk_level = "HIGH"
 
