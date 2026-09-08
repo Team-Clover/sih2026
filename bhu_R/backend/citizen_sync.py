@@ -4,7 +4,7 @@ from urllib import error, request
 
 
 def publish_prediction(payload):
-    api_url = os.getenv("CITIZEN_API_URL", "https://sih2026-62el.vercel.app").rstrip("/")
+    api_url = os.getenv("CITIZEN_API_URL", "https://bhu-raksha-server.onrender.com").rstrip("/")
     secret = os.getenv("ADMIN_API_SECRET")
     if not secret:
         print("Citizen sync skipped: ADMIN_API_SECRET is not configured.")
