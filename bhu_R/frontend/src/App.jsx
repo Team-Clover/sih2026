@@ -50,7 +50,7 @@ function App() {
       const terrain = calculateFinalRisk(response.landslide_probability, slope, elevation)
       const item = { ...payload, slope, elevation, ...response, aiProbability: Number(response.landslide_probability), ...terrain, createdAt: Date.now() }
       setResult(item); setHistory((current) => { const updated = [item, ...current].slice(0, 20); localStorage.setItem('landslide-intelligence-history', JSON.stringify(updated)); return updated }); setApiOnline(true); setActiveTab('home')
-    } catch { setError(`Unable to connect to AI prediction service. Make sure FastAPI is running on port 8001 (${API_BASE_URL}).`); setApiOnline(false) } finally { setLoading(false) }
+    } catch (err) { setError(`Unable to connect to AI prediction service (${err.message || 'Error'}). Make sure FastAPI is running on port 8000 (${API_BASE_URL}).`); setApiOnline(false) } finally { setLoading(false) }
   }
   function clearHistory() { if (window.confirm('Clear all saved predictions?')) { localStorage.removeItem('landslide-intelligence-history'); setHistory([]); setResult(null) } }
   function go(tab) { setActiveTab(tab); setMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }) }

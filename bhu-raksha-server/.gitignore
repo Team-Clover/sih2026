@@ -39,3 +39,4 @@ coverage/
 .DS_Store?
 _macOS
 Thumbs.db
+.vercel

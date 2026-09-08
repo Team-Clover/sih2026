@@ -312,31 +312,27 @@ def predict(request: PredictionRequest):
             }
         }
 
-        slope_val = request.slope if request.slope is not None else 30.0
-        elevation_val = request.elevation if request.elevation is not None else 1000.0
-        district_val = request.district if request.district else state
-
-        result["citizen_sync"] = publish_prediction({
-            "sourceId": request.source_id,
-            "state": state,
-            "district": district_val,
-            "year": request.year,
-            "month": request.month,
-            "rainfall": request.rainfall,
-            "rainfallAnomaly": request.rainfall_anomaly,
-            "rainfallAnomalyPct": request.rainfall_anomaly_pct,
-            "temperature": request.temperature,
-            "slope": slope_val,
-            "elevation": elevation_val,
-            "aiProbability": risk_percentage,
-            "slopeAdjustment": slope_adjustment,
-            "elevationAdjustment": elevation_adjustment,
-            "terrainAdjustment": terrain_adjustment,
-            "finalProbability": final_percentage,
-            "riskLevel": risk_level,
-            "source": "admin",
-        })
-
+        if request.slope is not None and request.elevation is not None:
+            result["citizen_sync"] = publish_prediction({
+                "sourceId": request.source_id,
+                "state": state,
+                "district": request.district,
+                "year": request.year,
+                "month": request.month,
+                "rainfall": request.rainfall,
+                "rainfallAnomaly": request.rainfall_anomaly,
+                "rainfallAnomalyPct": request.rainfall_anomaly_pct,
+                "temperature": request.temperature,
+                "slope": request.slope,
+                "elevation": request.elevation,
+                "aiProbability": risk_percentage,
+                "slopeAdjustment": slope_adjustment,
+                "elevationAdjustment": elevation_adjustment,
+                "terrainAdjustment": terrain_adjustment,
+                "finalProbability": final_percentage,
+                "riskLevel": risk_level,
+                "source": "admin",
+            })
 
 
         print("\n====================================")

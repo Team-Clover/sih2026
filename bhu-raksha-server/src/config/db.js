@@ -8,7 +8,8 @@ const connectDB = async () => {
     console.log("MongoDB connected successfully");
   });
 
-  await mongoose.connect(`${process.env.MONGO_URI}/bhu`, { family: 4 });
+  const baseUri = (process.env.MONGO_URI || "").replace(/\/+$/, "");
+  await mongoose.connect(`${baseUri}/bhu`, { family: 4 });
 };
 
 export { connectDB };
