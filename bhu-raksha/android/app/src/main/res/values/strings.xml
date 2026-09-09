@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Bhu Raksha</string>
+    <string name="title_activity_main">Bhu Raksha</string>
+    <string name="package_name">com.bhuraksha.app</string>
+    <string name="custom_url_scheme">com.bhuraksha.app</string>
+</resources>

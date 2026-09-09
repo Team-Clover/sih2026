@@ -21,13 +21,23 @@ const server = http.createServer(app);
 const allowedOrigins = [
   "https://sih2026-one-xi.vercel.app",
   "https://sih2026-62el.vercel.app",
+  "https://bhu-raksha-citizen.vercel.app",
+  "capacitor://localhost",
+  "http://localhost",
+  "https://localhost",
   ...(process.env.CORS_ORIGIN || "http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175,http://127.0.0.1:5180").split(","),
 ]
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/\/$/, ""))
   .filter(Boolean);
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return callback(null, true);
+    const cleanOrigin = origin ? origin.replace(/\/$/, "") : "";
+    if (
+      !origin ||
+      allowedOrigins.includes(cleanOrigin) ||
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(cleanOrigin) ||
+      cleanOrigin === "capacitor://localhost"
+    ) return callback(null, true);
     callback(new Error("Origin not allowed"));
   },
   credentials: true,

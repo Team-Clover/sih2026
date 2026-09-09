@@ -1,10 +1,24 @@
 import { API_BASE_URL } from '../config'
 
 async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, { credentials: 'include', headers: { 'Content-Type': 'application/json', ...options.headers }, ...options })
-  const body = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(body.message || 'Something went wrong. Please try again.')
-  return body
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, { credentials: 'include', headers: { 'Content-Type': 'application/json', ...options.headers }, ...options })
+    const body = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      if (response.status === 401) throw new Error(body.message || 'Authentication required.')
+      if (response.status === 403) throw new Error(body.message || 'Access denied.')
+      if (response.status === 404) throw new Error(body.message || 'Requested resource not found.')
+      if (response.status === 422) throw new Error(body.message || 'Invalid data submitted.')
+      if (response.status >= 500) throw new Error(body.message || 'Bhu Raksha server error. Please try again later.')
+      throw new Error(body.message || 'Something went wrong. Please try again.')
+    }
+    return body
+  } catch (err) {
+    if (err.name === 'TypeError' && err.message.includes('fetch')) {
+      throw new Error('Unable to connect to Bhu Raksha services. Please check your internet connection and try again.')
+    }
+    throw err
+  }
 }
 export const signup = (data) => request('/api/auth/signup', { method: 'POST', body: JSON.stringify(data) })
 export const login = (data) => request('/api/auth/login', { method: 'POST', body: JSON.stringify(data) })
